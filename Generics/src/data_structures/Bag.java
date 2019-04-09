@@ -1,5 +1,6 @@
 package data_structures;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 public class Bag<T> implements Iterable<T>
@@ -7,6 +8,7 @@ public class Bag<T> implements Iterable<T>
     //store all elements in our data structure in a fixed size array
     private T[] data;
     private int size; //number of elements in the bag
+    private int modCount;
 
     public Bag(int capacity)
     {
@@ -29,6 +31,7 @@ public class Bag<T> implements Iterable<T>
 
         data[size] = element;
         size++;
+        modCount++;
     }
 
     public boolean contains(T element)
@@ -60,7 +63,10 @@ public class Bag<T> implements Iterable<T>
 
     public void remove(T element)
     {
+        //we'll come back to this...
 
+        size--;
+        modCount++;
     }
 
     @Override
@@ -72,21 +78,27 @@ public class Bag<T> implements Iterable<T>
     private class BagIterator implements Iterator<T>
     {
         private int positionOfNextElement;
+        private int savedModCount;
 
         public BagIterator()
         {
             positionOfNextElement = 0;
+            savedModCount = modCount;
         }
 
         @Override
         public boolean hasNext()
         {
+            checkForModification();
+
             return positionOfNextElement < size;
         }
 
         @Override
         public T next()
         {
+            checkForModification();
+
             //prepare the next value to return
             T next = data[positionOfNextElement];
 
@@ -95,6 +107,15 @@ public class Bag<T> implements Iterable<T>
 
             //return the next element
             return next;
+        }
+
+        private void checkForModification()
+        {
+            if (savedModCount != modCount)
+            {
+                throw new ConcurrentModificationException(
+                        "You cannot change the bag while using an iterator");
+            }
         }
     }
 }
