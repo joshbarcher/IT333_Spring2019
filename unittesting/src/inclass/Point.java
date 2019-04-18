@@ -47,7 +47,7 @@ public class Point
      */
     public boolean isAtOrigin()
     {
-        return x == 0 && y == 0;
+        return x == 0 || y == 0;
     }
 
     /**
@@ -63,8 +63,10 @@ public class Point
     }
 
     /**
-     * Reports whether this points is in the input quadrant. The
-     * quadrant must be a value with the range [1,4]
+     * Reports whether this point is in the input quadrant. The
+     * quadrant must be a value with the range [1,4]. Any point
+     * with a zero component is not in any quadrant.
+     *
      * @param quadrant the quadrant to search within
      * @throws IllegalArgumentException this is thrown if the input quadrant
      * is outside of the range [1,4]
