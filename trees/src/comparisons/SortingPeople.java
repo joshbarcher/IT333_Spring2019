@@ -23,7 +23,14 @@ public class SortingPeople
             );
         }
 
-        //do something...
+        //print out the unsorted array
+        printArray(people);
+
+        //print out the sorted array
+        Arrays.sort(people, new Person.HeightComparator());
+        printArray(people);
+        Arrays.sort(people, new Person.NameComparator());
+        printArray(people);
     }
 
     private static void printArray(Person[] array)

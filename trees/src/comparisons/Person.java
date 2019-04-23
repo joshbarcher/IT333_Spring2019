@@ -34,6 +34,33 @@ public class Person
 	{
 		return "(" + fullName + "," + heightInInches + ")";
 	}
+
+	public static class NameComparator implements Comparator<Person>
+	{
+		@Override
+		public int compare(Person first, Person last)
+		{
+			return first.fullName.compareTo(last.fullName);
+		}
+	}
+
+	public static class HairComparator implements Comparator<Person>
+	{
+		@Override
+		public int compare(Person first, Person last)
+		{
+			return first.hairColor.compareTo(last.hairColor);
+		}
+	}
+
+	public static class HeightComparator implements Comparator<Person>
+	{
+		@Override
+		public int compare(Person first, Person last)
+		{
+			return first.heightInInches - last.heightInInches;
+		}
+	}
 }
 
 
