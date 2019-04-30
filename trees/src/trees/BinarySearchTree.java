@@ -3,6 +3,7 @@ package trees;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>
 {
@@ -182,7 +183,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>
     @Override
     public Iterator<T> iterator()
     {
-        return new NaiveIterator();
+        return new StackIterator();
     }
 
     private class NaiveIterator implements Iterator<T>
@@ -205,6 +206,48 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>
         public T next()
         {
             return elements.get(nextElement++);
+        }
+    }
+
+    private class StackIterator implements Iterator<T>
+    {
+        private Stack<Node> stack;
+
+        public StackIterator()
+        {
+            stack = new Stack<>();
+
+            //move to first node
+            Node current = root;
+            while (current != null)
+            {
+                stack.push(current);
+                current = current.left;
+            }
+        }
+
+        @Override
+        public boolean hasNext()
+        {
+            return !stack.isEmpty();
+        }
+
+        @Override
+        public T next()
+        {
+            Node next = stack.pop();
+
+            if (next.right != null)
+            {
+                Node current = next.right;
+                while (current != null)
+                {
+                    stack.push(current);
+                    current = current.left;
+                }
+            }
+
+            return next.data;
         }
     }
 
