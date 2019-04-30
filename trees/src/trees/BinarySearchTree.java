@@ -1,6 +1,10 @@
 package trees;
 
-public class BinarySearchTree<T extends Comparable<T>>
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>
 {
     private Node root;
     private int size;
@@ -8,6 +12,14 @@ public class BinarySearchTree<T extends Comparable<T>>
     public BinarySearchTree()
     {
         //do something...
+    }
+
+    public void add(T... elements)
+    {
+        for (int i = 0; i < elements.length; i++)
+        {
+            add(elements[i]);
+        }
     }
 
     public void add(T element)
@@ -74,12 +86,126 @@ public class BinarySearchTree<T extends Comparable<T>>
 
     public void remove(T element)
     {
+        root = remove(element, root);
+    }
 
+    private Node remove(T element, Node current)
+    {
+        //base case (not found)
+        if (current == null)
+        {
+            return null; //exit
+        }
+
+        //search for the element
+        int compare = element.compareTo(current.data);
+        if (compare == 0)
+        {
+            //found it!
+            if (current.left == null && current.right == null)
+            {
+                size--;
+                return null;
+            }
+            else if (current.left == null) //left child
+            {
+                size--;
+                return current.right;
+            }
+            else if (current.right == null)
+            {
+                size--;
+                return current.left;
+            }
+
+            //two-children case...
+            T replacement = findMax(current.left);
+            current.data = replacement;
+            remove(replacement, current.left);
+        }
+        else if (compare > 0)
+        {
+            current.right = remove(element, current.right);
+        }
+        else //compare < 0
+        {
+            current.left = remove(element, current.left);
+        }
+        return current;
+    }
+
+    private T findMin(Node current)
+    {
+        if (current.left == null)
+        {
+            return current.data;
+        }
+        return findMin(current.left);
+    }
+
+    private T findMax(Node current)
+    {
+        if (current.right == null)
+        {
+            return current.data;
+        }
+        return findMax(current.right);
     }
 
     public int size()
     {
-        return 0;
+        return size;
+    }
+
+    public List<T> inOrder()
+    {
+        List<T> results = new ArrayList<>();
+
+        inOrder(root, results);
+
+        return results;
+    }
+
+    private void inOrder(Node current, List<T> results)
+    {
+        if (current == null)
+        {
+            return; //exit
+        }
+
+        //left, node, right
+        inOrder(current.left, results);
+        results.add(current.data);
+        inOrder(current.right, results);
+    }
+
+    @Override
+    public Iterator<T> iterator()
+    {
+        return new NaiveIterator();
+    }
+
+    private class NaiveIterator implements Iterator<T>
+    {
+        private List<T> elements;
+        private int nextElement = 0;
+
+        public NaiveIterator()
+        {
+            elements = inOrder();
+        }
+
+        @Override
+        public boolean hasNext()
+        {
+            return nextElement < size;
+        }
+
+        @Override
+        public T next()
+        {
+            return elements.get(nextElement++);
+        }
     }
 
     private class Node
