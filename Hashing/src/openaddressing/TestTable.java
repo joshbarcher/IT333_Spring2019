@@ -11,7 +11,7 @@ public class TestTable
         HashTable<Integer> numberSet = new HashTable<>();
 
         //add a few elements
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 50; i++)
         {
             numberSet.add(numberGen.nextInt(100));
         }

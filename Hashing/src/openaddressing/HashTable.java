@@ -6,6 +6,7 @@ public class HashTable<T> implements Iterable<T>
 {
     private static final int INIT_TABLE_SIZE = 10;
     private static final double MAX_LOAD_FACTOR = 0.6;
+    public static final double RESIZE_RATE = 1.5;
 
     private int size;
     private HashElement[] table;
@@ -60,7 +61,23 @@ public class HashTable<T> implements Iterable<T>
 
     private void resize()
     {
-        //TODO handle later
+        //save the data in the old table
+        HashElement[] oldTable = table;
+
+        //reset my housekeeping variables
+        size = 0;
+
+        //create a new array
+        table = new HashElement[(int)(oldTable.length * RESIZE_RATE)];
+
+        //copy elements into the new table
+        for (int i = 0; i < oldTable.length; i++)
+        {
+            if (oldTable[i] != null && oldTable[i].active)
+            {
+                add((T)oldTable[i].data);
+            }
+        }
     }
 
     public boolean contains(T element)
