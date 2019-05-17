@@ -24,7 +24,7 @@ public class HashTable<T> implements Iterable<T>
     public boolean add(T element)
     {
         //did we exceed our load factor?
-        double loadFactor = (double)size / table.length;
+        double loadFactor = (double) size / table.length;
         if (loadFactor > MAX_LOAD_FACTOR)
         {
             resize();
@@ -42,10 +42,10 @@ public class HashTable<T> implements Iterable<T>
                 if (table[index].active)
                 {
                     return false;
-                }
-                else
+                } else
                 {
                     table[index].active = true;
+                    size++;
                     return true;
                 }
             }
@@ -68,31 +68,53 @@ public class HashTable<T> implements Iterable<T>
         size = 0;
 
         //create a new array
-        table = new HashElement[(int)(oldTable.length * RESIZE_RATE)];
+        table = new HashElement[(int) (oldTable.length * RESIZE_RATE)];
 
         //copy elements into the new table
         for (int i = 0; i < oldTable.length; i++)
         {
             if (oldTable[i] != null && oldTable[i].active)
             {
-                add((T)oldTable[i].data);
+                add((T) oldTable[i].data);
             }
         }
     }
 
     public boolean contains(T element)
     {
+        int index = find(element);
+        if (index != -1)
+        {
+            return table[index].active;
+        }
         return false;
+    }
+
+    private int find(T element)
+    {
+        int hashCode = Math.abs(element.hashCode());
+        int index = hashCode % table.length;
+
+        while (table[index] != null)
+        {
+            if (table[index].data.equals(element))
+            {
+                return index;
+            }
+
+            index = (index + 1) % table.length;
+        }
+        return -1;
     }
 
     public int size()
     {
-        return 0;
+        return size;
     }
 
     public boolean isEmpty()
     {
-        return false;
+        return size == 0;
     }
 
     @Override
