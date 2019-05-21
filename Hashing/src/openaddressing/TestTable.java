@@ -16,7 +16,21 @@ public class TestTable
             numberSet.add(numberGen.nextInt(100));
         }
 
+        //add a number that we know will be in the table
+        /*numberSet.add(12);
+
+        //try to remove an element in the table and one that is not
+        System.out.println("remove(12): " + numberSet.remove(12));
+        System.out.println("remove(101): " + numberSet.remove(101));
+
         //print them out
-        System.out.println(Arrays.toString(numberSet.getTable()));
+        System.out.println(Arrays.toString(numberSet.getTable()));*/
+
+        int count = 0;
+        for (int number : numberSet)
+        {
+            System.out.println(count + ": " + number);
+            count++;
+        }
     }
 }

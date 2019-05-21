@@ -39,10 +39,12 @@ public class HashTable<T> implements Iterable<T>
         {
             if (table[index].data.equals(element))
             {
+                //is this a duplicate?
                 if (table[index].active)
                 {
                     return false;
-                } else
+                }
+                else
                 {
                     table[index].active = true;
                     size++;
@@ -117,20 +119,69 @@ public class HashTable<T> implements Iterable<T>
         return size == 0;
     }
 
+    public boolean remove(T element)
+    {
+        int index = find(element);
+
+        //did we find it?
+        if (index != -1 && table[index].active)
+        {
+            table[index].active = false;
+            size--;
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public Iterator<T> iterator()
     {
-        return null;
-    }
-
-    public boolean remove(T element)
-    {
-        return false;
+        return new HashTableIterator(table);
     }
 
     public String toString()
     {
         return "";
+    }
+
+    private class HashTableIterator implements Iterator<T>
+    {
+        private HashElement[] table;
+        private int nextIndex = -1;
+
+        public HashTableIterator(HashElement[] table)
+        {
+            this.table = table;
+            findNext();
+        }
+
+        //find the index of the next available element, or -1 if there is none
+        private void findNext()
+        {
+            for (int i = nextIndex + 1; i < table.length; i++)
+            {
+                if (table[i] != null && table[i].active)
+                {
+                    nextIndex = i;
+                    return;
+                }
+            }
+            nextIndex = -1; //not found
+        }
+
+        @Override
+        public boolean hasNext()
+        {
+            return nextIndex != -1;
+        }
+
+        @Override
+        public T next()
+        {
+            T result = (T)table[nextIndex].data;
+            findNext();
+            return result;
+        }
     }
 
     private class HashElement<T>
