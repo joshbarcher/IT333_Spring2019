@@ -7,7 +7,19 @@ public class TestHeap
 {
     public static void main(String[] args)
     {
-        stressTest();
+        testBuildHeap();
+    }
+
+    private static void testBuildHeap()
+    {
+        BinaryHeap<Integer> numbersHeap = new BinaryHeap<>(
+            new Integer[] {13, 2, 15, 7, 0, -10, 5, 6, -20}
+        );
+
+        while (!numbersHeap.isEmpty())
+        {
+            System.out.println(numbersHeap.deleteMin());
+        }
     }
 
     private static void stressTest()
@@ -20,7 +32,7 @@ public class TestHeap
             numbersHeap.insert(random.nextInt(10000));
         }
 
-        for (int i = 0; i < 1000; i++)
+        while (!numbersHeap.isEmpty())
         {
             System.out.println(numbersHeap.deleteMin());
         }

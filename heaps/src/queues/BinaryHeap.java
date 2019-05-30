@@ -12,6 +12,27 @@ public class BinaryHeap<T extends Comparable<T>>
         heap = (T[])new Comparable[INITIAL_HEAP_SIZE];
     }
 
+    //assemble the array using the heapify routine
+    public BinaryHeap(T[] inputElements)
+    {
+        //make just enough room...
+        heap = (T[])new Comparable[inputElements.length + 1];
+
+        //copy the elements over
+        for (int i = 0; i < inputElements.length; i++)
+        {
+            heap[i + 1] = inputElements[i];
+        }
+
+        size = inputElements.length;
+
+        //heapify!
+        for (int i = inputElements.length / 2; i >= 1; i--)
+        {
+            sink(i);
+        }
+    }
+
     public void insert(T element)
     {
         //have we run out of room?
@@ -122,8 +143,23 @@ public class BinaryHeap<T extends Comparable<T>>
         }
     }
 
+    public T peek()
+    {
+        if (size == 0)
+        {
+            throw new IllegalStateException("Empty priority queue");
+        }
+
+        return heap[1];
+    }
+
     public int size()
     {
-        return 0;
+        return size;
+    }
+
+    public boolean isEmpty()
+    {
+        return size == 0;
     }
 }
